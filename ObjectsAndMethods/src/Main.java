@@ -10,11 +10,22 @@ public class Main {
 //        basket.getTotalPrice();
 
 
-        Arithmetic test = new Arithmetic(10,12);
-        System.out.println("summa of both number: " + test.adder());
-        System.out.println("multiplier of both number: " + test.multiplier());
-        System.out.println("max of both number: " + test.maxBetweenBoth());
-        System.out.println("min of both number: " + test.minBetweenBoth());
+//        Arithmetic arithmetic = new Arithmetic(10,12);
+//        System.out.println("summa of both number: " + arithmetic.adder());
+//        System.out.println("multiplier of both number: " + arithmetic.multiplier());
+//        System.out.println("max of both number: " + arithmetic.maxBetweenBoth());
+//        System.out.println("min of both number: " + arithmetic.minBetweenBoth());
+
+        Printer printer = new Printer();
+
+        printer.append("asdd","qazxsw",15);
+        printer.append("asdd","qazxsw",15);
+        printer.append("asdd","qazxsw");
+        System.out.println("Pages added to print queue: " + printer.getPendingPagesCount());
+        printer.print();
+        System.out.println("Pages witch was printed: " + printer.getAllPrintedPages());
+
+
 
     }
 }

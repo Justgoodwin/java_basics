@@ -33,6 +33,7 @@ public class Printer {
     public void clear(){
         System.out.println("Queue was cleared!");
         queue = "";
+        allAddedPages = 0;
     }
 
 

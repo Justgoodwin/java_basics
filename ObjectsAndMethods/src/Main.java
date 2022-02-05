@@ -1,31 +1,25 @@
 public class Main {
 
     public static void main(String[] args) {
-//        Basket basket = new Basket();
-//        basket.add("Milk", 40,1,1);
-//        basket.add("Butter", 12,3,2.3);
-//        basket.add("Bread", 23,1,0.4);
-//        basket.print("sadasd");
-//        basket.getTotalWeight();
-//        basket.getTotalPrice();
+        Basket basket1 = new Basket();
+        Basket basket2 = new Basket();
+        Basket basket3 = new Basket();
+        basket1.add("Milk", 40,1,1);
+        basket1.add("Butter", 12,3,2.3);
+        basket1.add("Bread", 23,1,0.4);
+        basket2.add("Soda", 55,4,0.7);
+        basket2.add("Cola", 148,1,2.3);
+        basket2.add("Pepsi", 145,1,0.4);
+        basket3.add("Juice", 60,1,1);
+        basket3.add("Water", 7,5,2.5);
+        basket3.add("Coffee", 23,1,0.4);
 
-
-//        Arithmetic arithmetic = new Arithmetic(10,12);
-//        System.out.println("summa of both number: " + arithmetic.adder());
-//        System.out.println("multiplier of both number: " + arithmetic.multiplier());
-//        System.out.println("max of both number: " + arithmetic.maxBetweenBoth());
-//        System.out.println("min of both number: " + arithmetic.minBetweenBoth());
-
-        Printer printer = new Printer();
-
-        printer.append("asdd","qazxsw",15);
-        printer.append("asdd","qazxsw",15);
-        printer.append("asdd","qazxsw");
-        System.out.println("Pages added to print queue: " + printer.getPendingPagesCount());
-        printer.print();
-        System.out.println("Pages witch was printed: " + printer.getAllPrintedPages());
-
-
-
+        basket1.print("Basket 1");
+        basket2.print("Basket 2");
+        basket3.print("Basket 3");
+        System.out.println(Basket.getTotalItemsInAllBusket());
+        System.out.println(Basket.getTotalPriceOfAllBusket());
+        System.out.println("Average price of all products: " + Basket.getAverageProductPrice());
+        System.out.println("Average price of one basket: " + Basket.getAveragePriceOfOneBasket());
     }
 }

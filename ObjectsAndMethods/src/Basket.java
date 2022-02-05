@@ -1,6 +1,10 @@
 public class Basket {
 
     private static int count = 0;
+    private static int totalPriceOfAllBusket = 0;
+    private static int totalItemsInAllBusket = 0;
+    private static double averagePriceOfAllItems = 0;
+    private static double averagePriceOfOneBasket = 0;
     private String items = "";
     private int totalPrice = 0;
     private int limit;
@@ -22,6 +26,30 @@ public class Basket {
         this.items = this.items + items;
         this.totalPrice = totalPrice;
     }
+
+    private static void increaseTotalPriceOfAllBusket(int totalPrice){
+        totalPriceOfAllBusket = totalPriceOfAllBusket + totalPrice;
+    }
+
+    private static  void increaseTotalItemsInAllBusket(int count){
+        totalItemsInAllBusket = totalItemsInAllBusket + count;
+    }
+
+    public static int getTotalItemsInAllBusket() {
+        return totalItemsInAllBusket;
+    }
+
+    public static int getTotalPriceOfAllBusket() {
+        return totalPriceOfAllBusket;
+    }
+
+    public static double getAverageProductPrice(){
+        return averagePriceOfAllItems = getTotalPriceOfAllBusket() / getTotalItemsInAllBusket();
+    }
+    public static int getAveragePriceOfOneBasket(){
+        return getTotalPriceOfAllBusket() / getCount();
+    }
+
 
     public static int getCount() {
         return count;
@@ -53,24 +81,30 @@ public class Basket {
         items = items + "\n" + name + " - " +
             count + " шт. " + "price" + " - " + price;
         totalPrice = totalPrice + count * price;
+        increaseTotalPriceOfAllBusket(price);
+        increaseTotalItemsInAllBusket(count);
     }
+
     public void add(String name, int price, int count, double weight){
         add(name, price, count);
         items += " mass - " + weight + " kg";
         totalWeight += weight;
-    }
-    public double getTotalWeight(){
-        return totalWeight;
     }
 
     public void clear() {
         items = "";
         totalPrice = 0;
         totalWeight = 0;
+        totalItemsInAllBusket = 0;
+        totalPriceOfAllBusket = 0;
     }
 
     public int getTotalPrice() {
         return totalPrice;
+    }
+
+    public double getTotalWeight(){
+        return totalWeight;
     }
 
     public boolean contains(String name) {

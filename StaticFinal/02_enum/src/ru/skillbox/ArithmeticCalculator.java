@@ -33,24 +33,6 @@ public class ArithmeticCalculator {
             }
             default:
                 return 0;
-//         if (Operation.ADD.equals(operation)) {
-//            return firstNumber + secondNumber;
-//
-//        }
-//        else if (Operation.SUBTRACT.equals(operation)) {
-//            return firstNumber - secondNumber;
-//        }
-//        else if (Operation.MULTIPLY.equals(operation)) {
-//            return firstNumber * secondNumber;
-//        }
-//        else if (Operation.DIVIDE.equals(operation)) {
-//            if (secondNumber != 0) {
-//                return firstNumber / secondNumber;
-//            }
-//            else {
-//                System.out.println("Нельзя делить на ноль!");
-//            }
-
         }
         return 0;
     }

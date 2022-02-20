@@ -15,8 +15,8 @@ public class Company {
         employees.remove(employee);
     }
 
-    public static int getIncome() {
-        return 21000000;
+    public static int getOperationIncome() {
+        return (int)(Math.random() * 265121815); //данные взяты из годовой отчётности ТАТНЕФТЬ
     }
 
     public List<Employee> getTopSalaryStaff(int count) {

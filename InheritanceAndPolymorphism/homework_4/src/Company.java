@@ -2,6 +2,11 @@ import java.util.*;
 
 public class Company {
     private final List<Employee> employees = new ArrayList<>();
+    private int operationIncome;
+
+    public Company() {
+        operationIncome = (int)(Math.random() * 265121815); //данные взяты из годовой отчётности ТАТНЕФТЬ
+    }
 
     public void hire(Employee employee) {
         this.employees.add(employee);
@@ -15,8 +20,8 @@ public class Company {
         employees.remove(employee);
     }
 
-    public static int getOperationIncome() {
-        return (int)(Math.random() * 265121815); //данные взяты из годовой отчётности ТАТНЕФТЬ
+    public int getOperationIncome() {
+        return operationIncome;
     }
 
     public List<Employee> getTopSalaryStaff(int count) {

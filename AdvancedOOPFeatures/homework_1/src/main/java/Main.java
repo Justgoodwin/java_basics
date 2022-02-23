@@ -17,7 +17,6 @@ public class Main {
     }
 
     public static void sortBySalaryAndAlphabet(List<Employee> staff) {
-        //TODO Метод должен отсортировать сотрудников по заработной плате и алфавиту.
         staff.sort((s1, s2) -> {
             if (s1.getSalary().equals(s2.getSalary())) {
                 return s1.getName().compareTo(s2.getName());

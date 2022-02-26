@@ -1,5 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomerStorage {
     private final Map<String, Customer> storage;
@@ -13,10 +15,31 @@ public class CustomerStorage {
         final int INDEX_SURNAME = 1;
         final int INDEX_EMAIL = 2;
         final int INDEX_PHONE = 3;
+        Pattern emailPattern = Pattern.compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@" +
+                "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", Pattern.CASE_INSENSITIVE);
+        Pattern phoneNumberPattern = Pattern.compile("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}",
+                Pattern.CASE_INSENSITIVE);
+
+
 
         String[] components = data.split("\\s+");
         String name = components[INDEX_NAME] + " " + components[INDEX_SURNAME];
-        storage.put(name, new Customer(name, components[INDEX_PHONE], components[INDEX_EMAIL]));
+        Matcher emailMatcher = emailPattern.matcher(components[INDEX_EMAIL]);
+        Matcher phoneNumberMatcher = phoneNumberPattern.matcher(components[INDEX_PHONE]);
+
+        if (components.length > 4) {
+            throw new IllegalArgumentException("количество элементов в строке больше 4");
+        }
+        else if (!emailMatcher.find())  {
+            throw new IllegalArgumentException("неверный формат email");
+        }
+        else if (!phoneNumberMatcher.find())  {
+            throw new IllegalArgumentException("неверный формат номера");
+        }
+        else {
+            storage.put(name, new Customer(name, components[INDEX_PHONE], components[INDEX_EMAIL]));
+        }
+
     }
 
     public void listCustomers() {

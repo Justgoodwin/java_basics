@@ -1,5 +1,8 @@
 import core.Line;
 import core.Station;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,22 +20,32 @@ public class Main {
 
     private static StationIndex stationIndex;
 
+    private static Logger logger;
+
     public static void main(String[] args) {
         RouteCalculator calculator = getRouteCalculator();
-
+        logger = LogManager.getRootLogger();
         System.out.println("Программа расчёта маршрутов метрополитена Санкт-Петербурга\n");
+
         scanner = new Scanner(System.in);
-        for (; ; ) {
-            Station from = takeStation("Введите станцию отправления:");
-            Station to = takeStation("Введите станцию назначения:");
+            for (; ; ) {
+                try {
+                    Station from = takeStation("Введите станцию отправления:");
+                    Station to = takeStation("Введите станцию назначения:");
 
-            List<Station> route = calculator.getShortestRoute(from, to);
-            System.out.println("Маршрут:");
-            printRoute(route);
-
-            System.out.println("Длительность: " +
-                    RouteCalculator.calculateDuration(route) + " минут");
-        }
+                    List<Station> route = calculator.getShortestRoute(from, to);
+                    System.out.println("Маршрут:");
+                    printRoute(route);
+                    System.out.println("Длительность: " +
+                            RouteCalculator.calculateDuration(route) + " минут");
+                }
+                catch (IllegalArgumentException e) {
+                    logger.error("Станция не найдена :(" + e);
+                }
+                catch (Exception e) {
+                    logger.log(Level.FATAL, e);
+                }
+            }
     }
 
     private static RouteCalculator getRouteCalculator() {
@@ -62,9 +75,11 @@ public class Main {
             String line = scanner.nextLine().trim();
             Station station = stationIndex.getStation(line);
             if (station != null) {
+                logger.info(station.getName());
                 return station;
             }
             System.out.println("Станция не найдена :(");
+            throw new IllegalArgumentException(station.getName());
         }
     }
 
@@ -83,6 +98,7 @@ public class Main {
             JSONArray connectionsArray = (JSONArray) jsonData.get("connections");
             parseConnections(connectionsArray);
         } catch (Exception ex) {
+            logger.fatal(ex);
             ex.printStackTrace();
         }
     }

@@ -6,7 +6,6 @@ import java.sql.Statement;
 public class DbConnection {
 
     private Connection connection;
-    private Statement statement;
     private final String url;
     private final String user;
     private final String pass;

@@ -1,3 +1,5 @@
+import org.hibernate.Session;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,27 +13,37 @@ public class Main {
 
     public static void main(String[] args) {
 
-        DbConnection dbConnection = new DbConnection(url, user, pass);
+//        DbConnection dbConnection = new DbConnection(url, user, pass);
+//
+//        dbConnection.getConnection();
+//
+//        Statement statement = dbConnection.getStatement();
+//
+//        final String querryString = "select course_name, COUNT(*) / "
+//                + "(MAX(month(subscription_date)) - MIN(month(subscription_date)) + 1) "
+//                + "AS avg from purchaselist group by course_name;";
 
-        dbConnection.getConnection();
 
-        Statement statement = dbConnection.getStatement();
+        Session session = CreateSessionFactory.createSession("hibernate.cfg.xml");
 
-        final String querryString = "select course_name, COUNT(*) / "
-                + "(MAX(month(subscription_date)) - MIN(month(subscription_date)) + 1) "
-                + "AS avg from purchaselist group by course_name;";
+        Course course = session.get(Course.class, 1);
 
-        try {
-            ResultSet purchaselist = statement.executeQuery(querryString);
+        System.out.println("Course name:\s" + course.getName() + "\nstudents count:\s" + course.getStudentCount());
 
-            while (purchaselist.next()) {
-                String courseName = purchaselist.getString("course_name");
-                String avgValue = purchaselist.getString("avg");
-                System.out.println(courseName + " - " + avgValue);
-            }
+        CreateSessionFactory.closeSession(session);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+//        try {
+//            ResultSet purchaselist = statement.executeQuery(querryString);
+//
+//            while (purchaselist.next()) {
+//                String courseName = purchaselist.getString("course_name");
+//                String avgValue = purchaselist.getString("avg");
+//                System.out.println(courseName + " - " + avgValue);
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 }

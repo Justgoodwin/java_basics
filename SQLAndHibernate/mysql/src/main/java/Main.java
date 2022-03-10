@@ -1,5 +1,9 @@
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.mapping.List;
+import org.hibernate.mapping.PrimaryKey;
+
+import java.util.ArrayList;
 
 
 public class Main {

@@ -1,8 +1,5 @@
 import org.hibernate.Session;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import org.hibernate.Transaction;
 
 
 public class Main {
@@ -26,9 +23,12 @@ public class Main {
 
         Session session = CreateSessionFactory.createSession("hibernate.cfg.xml");
 
+
+        Transaction transaction = session.beginTransaction();
+
         Course course = session.get(Course.class, 1);
 
-        System.out.println("Course name:\s" + course.getName() + "\nstudents count:\s" + course.getStudentCount());
+        System.out.println(course.getStudents().size());
 
         CreateSessionFactory.closeSession(session);
 

@@ -17,6 +17,7 @@ public class Subscription {
     @Column(name = "subscription_date", insertable = false, updatable = false)
     private Date subscriptionDate;
 
+
     public KeySubscriptions getId() {
         return id;
     }

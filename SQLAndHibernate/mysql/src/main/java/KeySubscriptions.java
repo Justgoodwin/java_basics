@@ -6,6 +6,7 @@ import java.util.Objects;
 @Embeddable
 public class KeySubscriptions implements Serializable {
 
+
     @Column(name = "student_id")
     private int studentId;
 

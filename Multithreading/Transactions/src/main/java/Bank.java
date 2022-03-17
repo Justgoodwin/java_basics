@@ -41,24 +41,24 @@ public class Bank {
         synchronized (from) {
             decreaseMoney(from, amount);
             increaseMoney(to, amount);
-
-            try {
-                if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
-                    from.setBlocked(BlockStatus.TRUE);
-                    to.setBlocked(BlockStatus.TRUE);
-                    System.out.println("Transfer failed \n Account are blocked by Security service" +
-                            from.getAccNumber() +
-                            to.getAccNumber());
-                    transactionStatus = false;
-                }
-                else {
-                    System.out.println("Transfer successful");
-                    transactionStatus = true;
-                }
-            }catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
+        try {
+            if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
+                from.setBlocked(BlockStatus.TRUE);
+                to.setBlocked(BlockStatus.TRUE);
+                System.out.println("Transfer failed \n Account are blocked by Security service" +
+                        from.getAccNumber() +
+                        to.getAccNumber());
+                transactionStatus = false;
+            }
+            else {
+                System.out.println("Transfer successful");
+                transactionStatus = true;
+            }
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

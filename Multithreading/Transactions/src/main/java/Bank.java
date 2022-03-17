@@ -30,7 +30,7 @@ public class Bank {
      * метод isFraud. Если возвращается true, то делается блокировка счетов (как – на ваше
      * усмотрение)
      */
-    public synchronized void transfer(String fromAccountNum, String toAccountNum, long amount) {
+    public void transfer(String fromAccountNum, String toAccountNum, long amount) {
         Account from = accounts.get(fromAccountNum);
         Account to = accounts.get(toAccountNum);
         System.out.printf("%s >> %s (%d)\s", from.getAccNumber(), to.getAccNumber(), amount);
@@ -38,24 +38,26 @@ public class Bank {
             return;
         }
 
-        decreaseMoney(from, amount);
-        increaseMoney(to, amount);
+        synchronized (from) {
+            decreaseMoney(from, amount);
+            increaseMoney(to, amount);
 
-        try {
-            if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
-                from.setBlocked(BlockStatus.TRUE);
-                to.setBlocked(BlockStatus.TRUE);
-                System.out.println("Transfer failed \n Account are blocked by Security service" +
-                        from.getAccNumber() +
-                        to.getAccNumber());
-                transactionStatus = false;
+            try {
+                if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
+                    from.setBlocked(BlockStatus.TRUE);
+                    to.setBlocked(BlockStatus.TRUE);
+                    System.out.println("Transfer failed \n Account are blocked by Security service" +
+                            from.getAccNumber() +
+                            to.getAccNumber());
+                    transactionStatus = false;
+                }
+                else {
+                    System.out.println("Transfer successful");
+                    transactionStatus = true;
+                }
+            }catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            else {
-                System.out.println("Transfer successful");
-                transactionStatus = true;
-            }
-        }catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 

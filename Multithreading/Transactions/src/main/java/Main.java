@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,6 +12,7 @@ public class Main {
         Account account3 = new Account("three", 1000000);
         Account account4 = new Account("four", 1000000);
 
+
         accountHashMap.put(account1.getAccNumber(), account1);
         accountHashMap.put(account2.getAccNumber(), account2);
         accountHashMap.put(account3.getAccNumber(), account3);
@@ -20,22 +22,28 @@ public class Main {
 
         ArrayList<Thread> threadArrayList = new ArrayList<>();
 
-        for (int i = 0; i < 150; i++) {
-            synchronized (bank) {
-                threadArrayList.add(new Thread(() ->  bank.transfer(account1.getAccNumber(), account2.getAccNumber(), 10000)));
-                threadArrayList.add(new Thread(() ->  bank.transfer(account2.getAccNumber(), account3.getAccNumber(), 10000)));
-                threadArrayList.add(new Thread(() ->  bank.transfer(account3.getAccNumber(), account4.getAccNumber(), 10000)));
-                threadArrayList.add(new Thread(() ->  bank.transfer(account4.getAccNumber(), account1.getAccNumber(), 10000)));
+        synchronized (bank) {
+            for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
+                System.out.println("name:\s" + entry.getKey() +
+                        "\smoney:\s" + entry.getValue().getMoney() +
+                        "\sstatus:\s" + entry.getValue().getIsBlocked());
             }
 
-        }
+            for (int i = 0; i < 150; i++) {
+                threadArrayList.add(new Thread(() ->  bank.transfer(account1.getAccNumber(), account2.getAccNumber(), 10000)));
+                threadArrayList.add(new Thread(() ->  bank.transfer(account2.getAccNumber(), account1.getAccNumber(), 5000)));
+            }
+            for (int i = 0; i < 5; i++) {
+                threadArrayList.add(new Thread(() ->  bank.transfer(account3.getAccNumber(), account4.getAccNumber(), 10000)));
+                threadArrayList.add(new Thread(() ->  bank.transfer(account4.getAccNumber(), account3.getAccNumber(), 5000)));
+            }
 
-        threadArrayList.forEach(Thread::start);
-        synchronized (bank) {
-            System.out.println("one: " + bank.getBalance("one") + " статус: " + account1.getIsBlocked());
-            System.out.println("two: " + bank.getBalance("two") + " статус: " + account2.getIsBlocked());
-            System.out.println("three: " + bank.getBalance("three") + " статус: " + account3.getIsBlocked());
-            System.out.println("four: " + bank.getBalance("four") + " статус: " + account4.getIsBlocked());
+            threadArrayList.forEach(Thread::start);
+            for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
+                System.out.println("name:\s" + entry.getKey() +
+                        "\smoney:\s" + entry.getValue().getMoney() +
+                        "\sstatus:\s" + entry.getValue().getIsBlocked());
+            }
         }
 
     }

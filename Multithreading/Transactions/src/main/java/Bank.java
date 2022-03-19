@@ -34,26 +34,23 @@ public class Bank {
         if (!check(from,to,amount)) {
             return;
         }
-
-        synchronized (Bank.class) {
-            decreaseMoney(from, amount);
-            increaseMoney(to, amount);
-            try {
-                if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
-                    from.setBlocked(BlockStatus.TRUE);
-                    to.setBlocked(BlockStatus.TRUE);
-                    System.out.println("Transfer failed \n Account are blocked by Security service" +
-                            "\s" + from.getAccNumber() +
-                            "\s" + to.getAccNumber());
-                    transactionStatus = false;
-                }
-                else {
-                    System.out.println("Transfer successful");
-                    transactionStatus = true;
-                }
-            }catch (Exception e) {
-                e.printStackTrace();
+        decreaseMoney(from, amount);
+        increaseMoney(to, amount);
+        try {
+            if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
+                from.setBlocked(BlockStatus.TRUE);
+                to.setBlocked(BlockStatus.TRUE);
+                System.out.println("Transfer failed \n Account are blocked by Security service" +
+                        "\s" + from.getAccNumber() +
+                        "\s" + to.getAccNumber());
+                transactionStatus = false;
             }
+            else {
+                System.out.println("Transfer successful");
+                transactionStatus = true;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -72,7 +69,7 @@ public class Bank {
         }
         return true;
     }
-    public synchronized long getBalance(String accountNum) {
+    public long getBalance(String accountNum) {
         return accounts.get(accountNum).getMoney();
     }
 
@@ -81,17 +78,12 @@ public class Bank {
         return sumAllAccounts;
     }
 
-    public synchronized void increaseMoney(Account account, long amount) {
-        synchronized (account) {
-            account.setMoney(account.getMoney() + amount);
-        }
+    public void increaseMoney(Account account, long amount) {
+        account.setMoney(account.getMoney() + amount);
     }
 
     public void decreaseMoney(Account account, long amount) {
-        synchronized (account) {
-            account.setMoney(account.getMoney() - amount);
-        }
-
+        account.setMoney(account.getMoney() - amount);
     }
 
     public boolean getTransactionStatus() {

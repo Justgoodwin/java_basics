@@ -23,7 +23,7 @@ public class Account {
         return accNumber;
     }
 
-    public void setBlocked(BlockStatus blocked) {
+    public synchronized void setBlocked(BlockStatus blocked) {
         if (blocked.equals(BlockStatus.TRUE)) {
             this.isBlocked = true;
         }

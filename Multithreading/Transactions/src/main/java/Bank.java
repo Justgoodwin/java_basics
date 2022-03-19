@@ -1,6 +1,4 @@
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
 
 public class Bank {
@@ -33,32 +31,30 @@ public class Bank {
     public void transfer(String fromAccountNum, String toAccountNum, long amount) {
         Account from = accounts.get(fromAccountNum);
         Account to = accounts.get(toAccountNum);
-        System.out.printf("%s >> %s (%d)\s", from.getAccNumber(), to.getAccNumber(), amount);
         if (!check(from,to,amount)) {
             return;
         }
 
-        synchronized (from) {
+        synchronized (Bank.class) {
             decreaseMoney(from, amount);
             increaseMoney(to, amount);
-        }
-        try {
-            if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
-                from.setBlocked(BlockStatus.TRUE);
-                to.setBlocked(BlockStatus.TRUE);
-                System.out.println("Transfer failed \n Account are blocked by Security service" +
-                        from.getAccNumber() +
-                        to.getAccNumber());
-                transactionStatus = false;
+            try {
+                if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
+                    from.setBlocked(BlockStatus.TRUE);
+                    to.setBlocked(BlockStatus.TRUE);
+                    System.out.println("Transfer failed \n Account are blocked by Security service" +
+                            "\s" + from.getAccNumber() +
+                            "\s" + to.getAccNumber());
+                    transactionStatus = false;
+                }
+                else {
+                    System.out.println("Transfer successful");
+                    transactionStatus = true;
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
             }
-            else {
-                System.out.println("Transfer successful");
-                transactionStatus = true;
-            }
-        }catch (InterruptedException e) {
-            e.printStackTrace();
         }
-
     }
 
     /**
@@ -76,23 +72,26 @@ public class Bank {
         }
         return true;
     }
-    public long getBalance(String accountNum) {
+    public synchronized long getBalance(String accountNum) {
         return accounts.get(accountNum).getMoney();
     }
 
     public long getSumAllAccounts() {
-        accounts.forEach((s, account) -> {
-            sumAllAccounts += account.getMoney();
-        });
+        accounts.forEach((s, account) -> sumAllAccounts += account.getMoney());
         return sumAllAccounts;
     }
 
-    public void increaseMoney(Account account, long amount) {
-        account.setMoney(account.getMoney() + amount);
+    public synchronized void increaseMoney(Account account, long amount) {
+        synchronized (account) {
+            account.setMoney(account.getMoney() + amount);
+        }
     }
 
     public void decreaseMoney(Account account, long amount) {
-        account.setMoney(account.getMoney() - amount);
+        synchronized (account) {
+            account.setMoney(account.getMoney() - amount);
+        }
+
     }
 
     public boolean getTransactionStatus() {

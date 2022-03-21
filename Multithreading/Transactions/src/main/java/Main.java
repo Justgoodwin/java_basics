@@ -22,28 +22,24 @@ public class Main {
 
         ArrayList<Thread> threadArrayList = new ArrayList<>();
 
-        synchronized (bank) {
-            for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
-                System.out.println("name:\s" + entry.getKey() +
-                        "\smoney:\s" + entry.getValue().getMoney() +
-                        "\sstatus:\s" + entry.getValue().getIsBlocked());
-            }
+        for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
+            System.out.println("name:\s" + entry.getKey() +
+                    "\smoney:\s" + bank.getBalance(entry.getKey()) +
+                    "\sstatus:\s" + entry.getValue().getIsBlocked());
+        }
 
-            for (int i = 0; i < 150; i++) {
-                threadArrayList.add(new Thread(() ->  bank.transfer(account1.getAccNumber(), account2.getAccNumber(), 10000)));
-                threadArrayList.add(new Thread(() ->  bank.transfer(account2.getAccNumber(), account1.getAccNumber(), 5000)));
-            }
-            for (int i = 0; i < 5; i++) {
-                threadArrayList.add(new Thread(() ->  bank.transfer(account3.getAccNumber(), account4.getAccNumber(), 10000)));
-                threadArrayList.add(new Thread(() ->  bank.transfer(account4.getAccNumber(), account3.getAccNumber(), 5000)));
-            }
+        for (int i = 0; i < 10; i++) {
+            threadArrayList.add(new Thread(() ->  bank.transfer(account1.getAccNumber(), account2.getAccNumber(), 10000)));
+            threadArrayList.add(new Thread(() ->  bank.transfer(account2.getAccNumber(), account1.getAccNumber(), 5000)));
+            threadArrayList.add(new Thread(() ->  bank.transfer(account3.getAccNumber(), account4.getAccNumber(), 10000)));
+            threadArrayList.add(new Thread(() ->  bank.transfer(account4.getAccNumber(), account3.getAccNumber(), 5000)));
+        }
 
-            threadArrayList.forEach(Thread::start);
-            for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
-                System.out.println("name:\s" + entry.getKey() +
-                        "\smoney:\s" + entry.getValue().getMoney() +
-                        "\sstatus:\s" + entry.getValue().getIsBlocked());
-            }
+        threadArrayList.forEach(Thread::start);
+        for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
+            System.out.println("name:\s" + entry.getKey() +
+                    "\smoney:\s" + bank.getBalance(entry.getKey()) +
+                    "\sstatus:\s" + entry.getValue().getIsBlocked());
         }
 
     }

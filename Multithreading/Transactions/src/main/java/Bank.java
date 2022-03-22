@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Random;
 
-public class Bank {
+public class Bank implements Runnable{
 
     private HashMap<String, Account> accounts;
     private final Random random = new Random();
@@ -12,15 +12,22 @@ public class Bank {
         return accounts;
     }
 
+    private Account from;
+    private Account to;
+    private long amount;
+
     public void setAccounts(HashMap<String, Account> accounts) {
         this.accounts = accounts;
     }
 
-    public synchronized boolean isFraud(String fromAccountNum, String toAccountNum, long amount)
+    public boolean isFraud(String fromAccountNum, String toAccountNum, long amount)
         throws InterruptedException {
         Thread.sleep(1000);
         return random.nextBoolean();
     }
+
+
+
 
     /**
      * TODO: реализовать метод. Метод переводит деньги между счетами. Если сумма транзакции > 50000,
@@ -29,35 +36,10 @@ public class Bank {
      * усмотрение)
      */
     public void transfer(String fromAccountNum, String toAccountNum, long amount) {
-        Account from = accounts.get(fromAccountNum);
-        Account to = accounts.get(toAccountNum);
-        if (!check(from,to,amount)) {
-            return;
-        }
-
-        synchronized (from) {
-            synchronized (to) {
-                decreaseMoney(from, amount);
-                increaseMoney(to, amount);
-                try {
-                    if (amount > 50000 && isFraud(fromAccountNum, toAccountNum, amount)) {
-                        from.setBlocked(BlockStatus.TRUE);
-                        to.setBlocked(BlockStatus.TRUE);
-                        System.out.println("Transfer failed \n Account are blocked by Security service" +
-                                "\s" + from.getAccNumber() +
-                                "\s" + to.getAccNumber());
-                        transactionStatus = false;
-                    }
-                    else {
-                        System.out.println("Transfer successful");
-                        transactionStatus = true;
-                    }
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
+        from = accounts.get(fromAccountNum);
+        to = accounts.get(toAccountNum);
+        this.amount = amount;
+        run();
     }
 
     /**
@@ -94,5 +76,35 @@ public class Bank {
 
     public boolean getTransactionStatus() {
         return transactionStatus;
+    }
+
+    @Override
+    public void run() {
+        if (!check(from,to,amount)) {
+            return;
+        }
+        try {
+            if (amount > 50000 && isFraud(from.getAccNumber(), to.getAccNumber(), amount)) {
+                from.setBlocked(BlockStatus.TRUE);
+                to.setBlocked(BlockStatus.TRUE);
+                System.out.println("Transfer failed \n Account are blocked by Security service" +
+                        "\s" + from.getAccNumber() +
+                        "\s" + to.getAccNumber());
+                transactionStatus = false;
+            }
+            else {
+                synchronized (from) {
+                    decreaseMoney(from,amount);
+                    synchronized (to) {
+                        increaseMoney(to, amount);
+                        to.notifyAll();
+                    }
+                }
+                System.out.println("Transfer successful");
+                transactionStatus = true;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

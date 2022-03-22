@@ -1,9 +1,9 @@
 
 public class Account {
 
-    private Long money;
-    private String accNumber;
-    private boolean isBlocked;
+    private volatile Long money;
+    private volatile String accNumber;
+    private volatile boolean isBlocked;
 
     public Account(String accNumber, long money) {
         this.accNumber = accNumber;
@@ -37,4 +37,5 @@ public class Account {
     public String toString() {
         return "Account number\s" + accNumber + ",\s" + "money = " + money;
     }
+
 }

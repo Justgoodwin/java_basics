@@ -48,11 +48,11 @@ public class Bank implements Runnable{
 
     public boolean check(Account from, Account to, long value) {
         if (from.getIsBlocked() || to.getIsBlocked()) {
-            System.out.println("\sone of account are blocked");
+            System.out.println("One of account are blocked");
             return false;
         }
         else if (!(from.getMoney() >= value && value > 0)) {
-            System.out.println("\sinvalid amount or not enough money");
+            System.out.println("Invalid amount or not enough money");
             return false;
         }
         return true;
@@ -93,13 +93,13 @@ public class Bank implements Runnable{
                 transactionStatus = false;
             }
             else {
-                synchronized (from) {
-                    decreaseMoney(from,amount);
+                synchronized (from) { //Java умный он сам в блоке synchronized захватывает монитор переданного обьекта, в конце блока освобождает
                     synchronized (to) {
+                        decreaseMoney(from, amount);
                         increaseMoney(to, amount);
-                        to.notifyAll();
                     }
                 }
+
                 System.out.println("Transfer successful");
                 transactionStatus = true;
             }

@@ -22,7 +22,6 @@ public class Main {
 
         ArrayList<Thread> threadArrayList = new ArrayList<>();
 
-
         for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
             System.out.println("name:\s" + entry.getKey() +
                     "\smoney:\s" + bank.getBalance(entry.getKey()) +
@@ -31,25 +30,11 @@ public class Main {
 
         for (int i = 0; i < 150; i++) {
             threadArrayList.add(new Thread(() ->  bank.transfer(account1.getAccNumber(), account2.getAccNumber(), 10000)));
-        }
-        for (int i = 0; i < 150; i++) {
             threadArrayList.add(new Thread(() ->  bank.transfer(account2.getAccNumber(), account1.getAccNumber(), 5000)));
-        }
-        for (int i = 0; i < 150; i++) {
             threadArrayList.add(new Thread(() ->  bank.transfer(account3.getAccNumber(), account4.getAccNumber(), 10000)));
-        }
-        for (int i = 0; i < 150; i++) {
             threadArrayList.add(new Thread(() ->  bank.transfer(account4.getAccNumber(), account3.getAccNumber(), 5000)));
         }
 
         threadArrayList.forEach(Thread::start);
-
-        for (Map.Entry<String, Account> entry : accountHashMap.entrySet()) {
-            System.out.println("name:\s" + entry.getKey() +
-                    "\smoney:\s" + bank.getBalance(entry.getKey()) +
-                    "\sstatus:\s" + entry.getValue().getIsBlocked());
-        }
-
-
     }
 }
